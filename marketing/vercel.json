@@ -7,7 +7,7 @@
   "redirects": [
     {
       "source": "/p/1",
-      "destination": "/poster?shift=deep&grid=stable&pressure=critical&role=architect",
+      "destination": "/poster?shift=dusk&grid=stable&pressure=critical&role=architect",
       "permanent": false
     }
   ],

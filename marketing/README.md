@@ -38,7 +38,7 @@ This writes a deterministic A3 SVG and JSON manifest under `poster/generated/`. 
 
 The verified A3 proof is published as a standalone image at `/afterhours-poster.png` (currently `https://afterhours-night-shift.vercel.app/afterhours-poster.png`). The image URL remains available for downloading and printing, but it is not the destination of the interactive display's morphing QR.
 
-The compact creative route `/p/1` temporarily redirects to `/poster?shift=deep&grid=stable&pressure=critical&role=architect`. This keeps the QR payload short while opening the exact deep-shift Architect poster state. A temporary redirect is intentional so the campaign destination can be changed later without clients caching an obsolete target.
+The compact creative route `/p/1` temporarily redirects to `/poster?shift=dusk&grid=stable&pressure=critical&role=architect`. This keeps the QR payload short while opening the exact dusk-shift Architect poster state. A temporary redirect is intentional so the campaign destination can be changed later without clients caching an obsolete target.
 
 The QR visible inside that PNG remains encoded with the campaign-tagged landing URL recorded in `poster/generated/afterhours-poster-a3-v1.json`. It opens the landing root with `c`, UTM, and `qr_id` parameters; it does not loop back to the PNG or open `/poster.html`. Publishing the image at a new route does not change its embedded QR payload.
 
@@ -84,7 +84,7 @@ Generate and print the QR poster only after the production alias or custom domai
 - `/api/track` stores allowlisted, pseudonymous funnel events; `/api/signup` stores consented contact details separately.
 - Email addresses are deliberately not joined to browser session IDs.
 - Use `landing_view` as the scan proxy for print QRs that open the landing page, and compare campaigns in `private.marketing_funnel_daily`.
-- The interactive display emits `poster_started`, `poster_midpoint`, and `poster_completed`. Its morphing QR opens `/p/1`, whose redirect can be counted in Vercel access logs; the destination poster page can also run the Supabase browser tracker and preserves the requested deep/stable/critical/Architect state in its query string.
+- The interactive display emits `poster_started`, `poster_midpoint`, and `poster_completed`. Its morphing QR opens `/p/1`, whose redirect can be counted in Vercel access logs; the destination poster page can also run the Supabase browser tracker and preserves the requested dusk/stable/critical/Architect state in its query string.
 - The core funnel is landing view → role/training exploration → CTA → game open or waitlist completion.
 - Give every poster location or creative a unique allowlisted campaign code, and use that same code for `--campaign` so the manifest, QR URL, and database agree.
 
