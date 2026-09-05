@@ -118,15 +118,20 @@
 
       <dialog class="qr-dialog scan-studio" id="qr-dialog" aria-labelledby="qr-title" aria-describedby="qr-description">
         <header class="scan-studio__header">
-          <div class="scan-studio__brand" aria-label="AFTERHOURS scan studio">
-            <span aria-hidden="true">A</span>
-            <p><b>AFTERHOURS</b><small>ROLE SIGNAL LAB</small></p>
+          <div class="scan-studio__nav">
+            <button class="studio-back" id="studio-back" type="button" aria-label="Back to the city poster">
+              <span aria-hidden="true">←</span>
+              <b class="studio-back__long">Back to city</b>
+              <b class="studio-back__short" aria-hidden="true">Back</b>
+            </button>
+            <div class="scan-studio__brand" aria-label="AFTERHOURS scan studio">
+              <span aria-hidden="true">A</span>
+              <p><b>AFTERHOURS</b><small>ROLE SIGNAL LAB</small></p>
+            </div>
           </div>
           <div class="scan-studio__actions">
             <button class="studio-share" id="studio-share" type="button"><span aria-hidden="true">↗</span> Share</button>
-            <form method="dialog">
-              <button class="qr-dialog__close" type="submit" aria-label="Close scan studio">×</button>
-            </form>
+            <button class="qr-dialog__close" id="studio-close" type="button" aria-label="Close scan studio and return to the city poster">×</button>
           </div>
         </header>
 

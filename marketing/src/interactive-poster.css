@@ -585,6 +585,12 @@ input:focus-visible + span {
   padding: max(0.8rem, env(safe-area-inset-top)) clamp(1rem, 2.7vw, 2.5rem) 0.5rem;
 }
 
+.scan-studio__nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.65rem, 1.3vw, 1.15rem);
+}
+
 .scan-studio__brand {
   display: flex;
   align-items: center;
@@ -633,10 +639,7 @@ input:focus-visible + span {
   gap: 0.55rem;
 }
 
-.scan-studio__actions form {
-  margin: 0;
-}
-
+.studio-back,
 .studio-share,
 .qr-dialog__close {
   min-height: 44px;
@@ -646,13 +649,27 @@ input:focus-visible + span {
   cursor: pointer;
 }
 
+.studio-back,
 .studio-share {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
   padding: 0.6rem 0.9rem;
   border-radius: 999px;
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
+}
+
+.studio-back span {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.studio-back__short {
+  display: none;
 }
 
 .qr-dialog__close {
@@ -664,6 +681,7 @@ input:focus-visible + span {
   font-size: 1.35rem;
 }
 
+.studio-back:hover,
 .studio-share:hover,
 .qr-dialog__close:hover {
   border-color: var(--role-primary);
@@ -1171,18 +1189,33 @@ input:focus-visible + span {
     padding-top: max(0.55rem, env(safe-area-inset-top));
   }
 
+  .scan-studio__nav {
+    gap: 0.48rem;
+  }
+
   .scan-studio__brand > span {
     width: 2.2rem;
     font-size: 1.28rem;
   }
 
-  .scan-studio__brand b {
-    font-size: 0.88rem;
-  }
-
-  .scan-studio__brand small,
+  .scan-studio__brand p,
   .studio-share {
     font-size: 0;
+  }
+
+  .studio-back {
+    min-width: 68px;
+    padding-inline: 0.62rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+  }
+
+  .studio-back__long {
+    display: none;
+  }
+
+  .studio-back__short {
+    display: inline;
   }
 
   .studio-share {

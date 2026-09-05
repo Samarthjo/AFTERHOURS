@@ -263,6 +263,8 @@ const studioRoleKicker = required<HTMLElement>('#studio-role-kicker');
 const studioRoleTitle = required<HTMLElement>('#qr-title');
 const studioRoleDescription = required<HTMLElement>('#qr-description');
 const studioShareButton = required<HTMLButtonElement>('#studio-share');
+const studioBackButton = required<HTMLButtonElement>('#studio-back');
+const studioCloseButton = required<HTMLButtonElement>('#studio-close');
 const studioRoleInputs = Array.from(document.querySelectorAll<HTMLInputElement>('input[name="studio-role"]'));
 const shareButton = required<HTMLButtonElement>('#share-poster');
 const waitlistLink = required<HTMLAnchorElement>('#poster-waitlist');
@@ -295,6 +297,10 @@ let pointerDistance = 0;
 let suppressNextClick = false;
 let statusTimer = 0;
 let revealInProgress = false;
+let revealRevision = 0;
+let historyClosePending = false;
+
+const STUDIO_HISTORY_KEY = 'afterhoursSignalStudio';
 
 const motion = {
   x: 0,
@@ -360,6 +366,12 @@ function getSessionId(): string {
   } catch {
     return crypto.randomUUID();
   }
+}
+
+function isStudioHistoryState(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object'
+    && value !== null
+    && (value as Record<string, unknown>)[STUDIO_HISTORY_KEY] === true;
 }
 
 function viewportBucket(): 'compact' | 'regular' | 'wide' {
@@ -1543,7 +1555,31 @@ function updateDisplayUrl(): void {
   url.searchParams.set('grid', state.grid);
   url.searchParams.set('pressure', state.pressure);
   url.searchParams.set('role', selectedStudioRole);
-  window.history.replaceState(null, '', url);
+  const studioHistoryState = isStudioHistoryState(window.history.state)
+    ? window.history.state
+    : null;
+  url.hash = studioHistoryState ? 'signal' : '';
+  window.history.replaceState(studioHistoryState, '', url);
+}
+
+function pushStudioHistory(): void {
+  if (!/^https?:$/.test(window.location.protocol) || isStudioHistoryState(window.history.state)) return;
+  const url = new URL(window.location.href);
+  url.hash = 'signal';
+  const currentState = typeof window.history.state === 'object' && window.history.state !== null
+    ? window.history.state as Record<string, unknown>
+    : {};
+  window.history.pushState({ ...currentState, [STUDIO_HISTORY_KEY]: true }, '', url);
+}
+
+function returnToPoster(): void {
+  if (!qrDialog.open || historyClosePending) return;
+  if (isStudioHistoryState(window.history.state)) {
+    historyClosePending = true;
+    window.history.back();
+    return;
+  }
+  qrDialog.close();
 }
 
 function posterShareUrl(): string {
@@ -1619,15 +1655,19 @@ function handlePointerCancel(event: PointerEvent): void {
   beginLoop();
 }
 
-async function revealSignal(): Promise<void> {
+async function revealSignal(pushHistory = true): Promise<void> {
   if (revealInProgress || qrDialog.open) return;
+  const revision = ++revealRevision;
   revealInProgress = true;
+  if (pushHistory) pushStudioHistory();
   studioMode = 'qr';
   await renderMorph(true, false);
+  if (revision !== revealRevision) return;
   cityTrigger.setAttribute('aria-expanded', 'true');
   stopLoop();
   posterShell.classList.add('is-revealing');
   if (!reducedMotion) await new Promise<void>((resolve) => window.setTimeout(resolve, 360));
+  if (revision !== revealRevision) return;
   if (!qrDialog.open) qrDialog.showModal();
   posterShell.classList.remove('is-revealing');
   revealInProgress = false;
@@ -1740,6 +1780,8 @@ waitlistLink.addEventListener('click', () => {
   });
 });
 studioShareButton.addEventListener('click', () => void sharePoster());
+studioBackButton.addEventListener('click', returnToPoster);
+studioCloseButton.addEventListener('click', returnToPoster);
 morphTrigger.addEventListener('click', () => {
   if (morphLocked) return;
   studioMode = studioMode === 'qr' ? 'sculpture' : 'qr';
@@ -1747,16 +1789,41 @@ morphTrigger.addEventListener('click', () => {
   void renderMorph();
 });
 qrDialog.addEventListener('close', () => {
+  historyClosePending = false;
+  revealRevision += 1;
   posterShell.classList.remove('is-revealing');
   revealInProgress = false;
   studioMode = 'qr';
   void renderMorph(true, false);
   cityTrigger.setAttribute('aria-expanded', 'false');
+  updateDisplayUrl();
   cityTrigger.focus({ preventScroll: true });
   beginLoop();
 });
+qrDialog.addEventListener('cancel', (event) => {
+  event.preventDefault();
+  returnToPoster();
+});
 qrDialog.addEventListener('click', (event) => {
-  if (event.target === qrDialog) qrDialog.close();
+  if (event.target === qrDialog) returnToPoster();
+});
+
+window.addEventListener('popstate', (event) => {
+  historyClosePending = false;
+  if (isStudioHistoryState(event.state)) {
+    if (!qrDialog.open) void revealSignal(false);
+    return;
+  }
+  revealRevision += 1;
+  if (qrDialog.open) {
+    qrDialog.close();
+    return;
+  }
+  posterShell.classList.remove('is-revealing');
+  revealInProgress = false;
+  cityTrigger.setAttribute('aria-expanded', 'false');
+  updateDisplayUrl();
+  beginLoop();
 });
 
 document.addEventListener('visibilitychange', () => {
