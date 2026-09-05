@@ -595,6 +595,8 @@ input:focus-visible + span {
   display: flex;
   align-items: center;
   gap: 0.7rem;
+  color: var(--studio-ink);
+  text-decoration: none;
 }
 
 .scan-studio__brand > span {
