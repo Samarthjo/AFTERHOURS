@@ -1032,9 +1032,9 @@ input:focus-visible + span {
   }
 }
 
-@media (min-width: 681px) and (max-height: 760px) {
+@media (min-width: 681px) and (max-height: 820px) {
   .morph-trigger {
-    width: min(62dvh, 45vw, 42rem);
+    width: min(62dvh, calc(100dvh - 16rem), 45vw, 42rem);
   }
 
   .scan-studio__footer {
