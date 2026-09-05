@@ -227,6 +227,70 @@ input:focus-visible + span {
   text-transform: uppercase;
 }
 
+.poster-waitlist-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  width: min(22rem, calc(100vw - 2rem));
+  min-height: 52px;
+  margin-top: clamp(1.15rem, 2.6vh, 1.9rem);
+  padding: 0.62rem 0.65rem 0.62rem 0.9rem;
+  border: 1px solid rgba(98, 245, 155, 0.56);
+  border-radius: 0.3rem;
+  color: var(--ink);
+  background:
+    linear-gradient(90deg, rgba(98, 245, 155, 0.12), rgba(4, 20, 14, 0.88) 42%),
+    rgba(2, 12, 8, 0.88);
+  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(216, 255, 99, 0.03);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
+  text-decoration: none;
+  text-shadow: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.poster-waitlist-cta span,
+.poster-waitlist-cta small,
+.poster-waitlist-cta strong {
+  display: block;
+}
+
+.poster-waitlist-cta small {
+  margin-bottom: 0.18rem;
+  color: var(--green);
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+}
+
+.poster-waitlist-cta strong {
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.poster-waitlist-cta i {
+  display: grid;
+  width: 2.25rem;
+  aspect-ratio: 1;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 0.2rem;
+  color: #04110c;
+  background: var(--green);
+  box-shadow: 0 0 1.4rem rgba(98, 245, 155, 0.18);
+  font-style: normal;
+  font-weight: 900;
+}
+
+.poster-waitlist-cta:hover {
+  border-color: var(--lime);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.34), 0 0 1.8rem rgba(98, 245, 155, 0.12);
+  transform: translateY(-2px);
+}
+
 .city-trigger {
   position: absolute;
   inset: 0;
@@ -1019,6 +1083,25 @@ input:focus-visible + span {
     font-size: clamp(3.2rem, 17vw, 5.3rem);
   }
 
+  .poster-waitlist-cta {
+    width: min(20rem, calc(100vw - 2rem));
+    min-height: 46px;
+    margin-top: 0.9rem;
+    padding-block: 0.48rem;
+  }
+
+  .poster-waitlist-cta small {
+    font-size: 0.48rem;
+  }
+
+  .poster-waitlist-cta strong {
+    font-size: 0.65rem;
+  }
+
+  .poster-waitlist-cta i {
+    width: 2rem;
+  }
+
   .core-target {
     top: 48%;
     left: 65%;
@@ -1195,6 +1278,10 @@ input:focus-visible + span {
   .poster-copy__line {
     max-width: 14rem;
     line-height: 1.35;
+  }
+
+  .poster-waitlist-cta {
+    max-width: 17.5rem;
   }
 
   .scene-instruction small {

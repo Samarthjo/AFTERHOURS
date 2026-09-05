@@ -10,7 +10,7 @@ type Grid = 'strained' | 'stable' | 'surplus';
 type Pressure = 'watch' | 'critical' | 'cascade';
 type CivicRole = 'architect' | 'cultivator' | 'engineer' | 'operator' | 'medic';
 type StudioMode = 'qr' | 'sculpture';
-type PosterEvent = 'poster_started' | 'poster_midpoint' | 'poster_completed';
+type PosterEvent = 'poster_started' | 'poster_midpoint' | 'poster_completed' | 'cta_clicked';
 
 interface CityState {
   shift: Shift;
@@ -265,6 +265,8 @@ const studioRoleDescription = required<HTMLElement>('#qr-description');
 const studioShareButton = required<HTMLButtonElement>('#studio-share');
 const studioRoleInputs = Array.from(document.querySelectorAll<HTMLInputElement>('input[name="studio-role"]'));
 const shareButton = required<HTMLButtonElement>('#share-poster');
+const waitlistLink = required<HTMLAnchorElement>('#poster-waitlist');
+const waitlistRoleLabel = required<HTMLElement>('#poster-waitlist-role');
 const shareStatus = required<HTMLElement>('#share-status');
 const stateNarrative = required<HTMLElement>('#state-narrative');
 const shiftReadout = required<HTMLElement>('#shift-readout');
@@ -366,7 +368,10 @@ function viewportBucket(): 'compact' | 'regular' | 'wide' {
   return 'wide';
 }
 
-function trackPoster(eventName: PosterEvent): void {
+function trackPoster(
+  eventName: PosterEvent,
+  dimensions: { role: CivicRole; placement: 'hero'; destination: 'waitlist' } | null = null,
+): void {
   if (emittedEvents.has(eventName)) return;
   emittedEvents.add(eventName);
   const payload = {
@@ -376,6 +381,7 @@ function trackPoster(eventName: PosterEvent): void {
     eventName,
     path: '/poster',
     viewportBucket: viewportBucket(),
+    ...(dimensions ?? {}),
   };
 
   void fetch('/api/track', {
@@ -1515,6 +1521,21 @@ function updateStateUi(): void {
 }
 
 function updateDisplayUrl(): void {
+  const rosterUrl = new URL('/', window.location.origin);
+  rosterUrl.searchParams.set('c', CAMPAIGN);
+  rosterUrl.searchParams.set('utm_source', 'interactive_poster');
+  rosterUrl.searchParams.set('utm_medium', 'cta');
+  rosterUrl.searchParams.set('utm_campaign', 'afterhours_launch');
+  rosterUrl.searchParams.set('utm_content', 'poster_hero');
+  rosterUrl.searchParams.set('role', selectedStudioRole);
+  rosterUrl.hash = 'join';
+  waitlistLink.href = rosterUrl.toString();
+  waitlistRoleLabel.textContent = `Join the ${roleProfiles[selectedStudioRole].label} waitlist`;
+  waitlistLink.setAttribute(
+    'aria-label',
+    `Join the ${roleProfiles[selectedStudioRole].label} founding waitlist`,
+  );
+
   if (!/^https?:$/.test(window.location.protocol)) return;
   const url = new URL(window.location.href);
   url.search = '';
@@ -1711,6 +1732,13 @@ cityTrigger.addEventListener('click', (event) => {
 });
 
 shareButton.addEventListener('click', () => void sharePoster());
+waitlistLink.addEventListener('click', () => {
+  trackPoster('cta_clicked', {
+    role: selectedStudioRole,
+    placement: 'hero',
+    destination: 'waitlist',
+  });
+});
 studioShareButton.addEventListener('click', () => void sharePoster());
 morphTrigger.addEventListener('click', () => {
   if (morphLocked) return;
