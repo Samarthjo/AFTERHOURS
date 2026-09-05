@@ -4,6 +4,7 @@ import '@fontsource/space-grotesk/latin-400.css';
 import '@fontsource/space-grotesk/latin-700.css';
 import * as d3 from 'd3';
 import QRCode from 'qrcode';
+import { GuidedTour, readGuideStage, writeGuideStage } from './guided-tour';
 
 type Shift = 'dusk' | 'deep' | 'dawn';
 type Grid = 'strained' | 'stable' | 'surplus';
@@ -269,12 +270,14 @@ const studioRoleInputs = Array.from(document.querySelectorAll<HTMLInputElement>(
 const shareButton = required<HTMLButtonElement>('#share-poster');
 const waitlistLink = required<HTMLAnchorElement>('#poster-waitlist');
 const waitlistRoleLabel = required<HTMLElement>('#poster-waitlist-role');
+const corePrompt = required<HTMLElement>('.scene-instruction');
 const shareStatus = required<HTMLElement>('#share-status');
 const stateNarrative = required<HTMLElement>('#state-narrative');
 const shiftReadout = required<HTMLElement>('#shift-readout');
 const gridReadout = required<HTMLElement>('#grid-readout');
 const pressureReadout = required<HTMLElement>('#pressure-readout');
 const context = requireCanvasContext(cityCanvas);
+const posterGuide = new GuidedTour(() => writeGuideStage('dismissed'));
 
 const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 let reducedMotion = reducedMotionQuery.matches;
@@ -1582,6 +1585,55 @@ function returnToPoster(): void {
   qrDialog.close();
 }
 
+function showQrGuide(): void {
+  if (!qrDialog.open || readGuideStage() !== 'qr') return;
+  posterGuide.show({
+    target: morphTapLabel,
+    container: qrDialog,
+    step: 'STEP 4 OF 4',
+    title: 'Reveal your role',
+    body: `Tap the QR code to build the ${roleProfiles[selectedStudioRole].label} figure. Tap it again to return to the code.`,
+    placement: 'right',
+    scrollIntoView: false,
+  });
+}
+
+function showPosterGuide(): void {
+  const currentStage = readGuideStage();
+  if (currentStage === 'complete' || currentStage === 'dismissed') {
+    posterGuide.hide();
+    return;
+  }
+
+  if (!currentStage || currentStage === 'waitlist') {
+    writeGuideStage('waitlist');
+    posterGuide.show({
+      target: waitlistLink,
+      step: 'STEP 1 OF 4',
+      title: 'Join the founding roster',
+      body: 'Tap “Join the Architect waitlist.” After registration, the A signal will bring you back here.',
+      placement: 'right',
+      scrollIntoView: false,
+    });
+    return;
+  }
+
+  if (currentStage === 'qr' && qrDialog.open) {
+    showQrGuide();
+    return;
+  }
+
+  writeGuideStage('core');
+  posterGuide.show({
+    target: corePrompt,
+    step: 'STEP 3 OF 4',
+    title: 'Reveal the city signal',
+    body: 'Tap the Civic Core to open the signal hidden inside the city.',
+    placement: 'above',
+    scrollIntoView: false,
+  });
+}
+
 function posterShareUrl(): string {
   const url = new URL(POSTER_SHARE_URL);
   url.searchParams.set('shift', state.shift);
@@ -1672,6 +1724,7 @@ async function revealSignal(pushHistory = true): Promise<void> {
   posterShell.classList.remove('is-revealing');
   revealInProgress = false;
   trackPoster('poster_completed');
+  showQrGuide();
 }
 
 function handleStudioRoleChange(event: Event): void {
@@ -1768,11 +1821,18 @@ cityTrigger.addEventListener('click', (event) => {
     suppressNextClick = false;
     return;
   }
+  const guideStage = readGuideStage();
+  if (guideStage === 'logo' || guideStage === 'core') {
+    writeGuideStage('qr');
+    posterGuide.hide();
+  }
   void revealSignal();
 });
 
 shareButton.addEventListener('click', () => void sharePoster());
 waitlistLink.addEventListener('click', () => {
+  writeGuideStage('waitlist');
+  posterGuide.hide();
   trackPoster('cta_clicked', {
     role: selectedStudioRole,
     placement: 'hero',
@@ -1784,6 +1844,10 @@ studioBackButton.addEventListener('click', returnToPoster);
 studioCloseButton.addEventListener('click', returnToPoster);
 morphTrigger.addEventListener('click', () => {
   if (morphLocked) return;
+  if (readGuideStage() === 'qr') {
+    writeGuideStage('complete');
+    posterGuide.hide();
+  }
   studioMode = studioMode === 'qr' ? 'sculpture' : 'qr';
   trackPoster('poster_midpoint');
   void renderMorph();
@@ -1798,6 +1862,10 @@ qrDialog.addEventListener('close', () => {
   cityTrigger.setAttribute('aria-expanded', 'false');
   updateDisplayUrl();
   cityTrigger.focus({ preventScroll: true });
+  if (readGuideStage() === 'qr') {
+    writeGuideStage('core');
+    window.setTimeout(showPosterGuide, 80);
+  }
   beginLoop();
 });
 qrDialog.addEventListener('cancel', (event) => {
@@ -1851,3 +1919,7 @@ void renderMorph(true, false);
 updateDisplayUrl();
 resizeCanvas();
 trackPoster('poster_started');
+window.setTimeout(showPosterGuide, reducedMotion ? 0 : 420);
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) window.setTimeout(showPosterGuide, 80);
+});

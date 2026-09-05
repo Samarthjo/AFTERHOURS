@@ -1,4 +1,5 @@
 import { initCityPulse } from './city-pulse';
+import { GuidedTour, readGuideStage, writeGuideStage } from './guided-tour';
 
 type CivicRole = 'architect' | 'cultivator' | 'engineer' | 'operator' | 'medic';
 type CtaPlacement = 'header' | 'hero' | 'role' | 'pulse' | 'final' | 'mobile';
@@ -333,7 +334,48 @@ const form = document.querySelector<HTMLFormElement>('[data-signup-form]');
 const formStatus = document.querySelector<HTMLElement>('[data-form-status]');
 const signupProgress = document.querySelector<HTMLElement>('[data-signup-progress]');
 const signupProgressLabel = document.querySelector<HTMLElement>('[data-signup-progress-label]');
+const landingBrand = document.querySelector<HTMLAnchorElement>('.site-header .brand');
+const waitlistSubmit = form?.querySelector<HTMLButtonElement>('button[type="submit"]') || null;
+const landingGuide = new GuidedTour(() => writeGuideStage('dismissed'));
 let signupStarted = false;
+
+function showLandingGuide(): void {
+  const currentStage = readGuideStage();
+  if (currentStage === 'complete' || currentStage === 'dismissed') {
+    landingGuide.hide();
+    return;
+  }
+
+  if (currentStage === 'logo' || currentStage === 'core' || currentStage === 'qr') {
+    if (!landingBrand) return;
+    writeGuideStage('logo');
+    landingGuide.show({
+      target: landingBrand,
+      step: 'STEP 2 OF 4',
+      title: 'Enter the city',
+      body: 'Your shift is reserved. Tap the A signal above to enter the city poster.',
+      placement: 'below',
+      scrollIntoView: false,
+    });
+    return;
+  }
+
+  if (!waitlistSubmit) return;
+  writeGuideStage('waitlist');
+  landingGuide.show({
+    target: waitlistSubmit,
+    step: 'STEP 1 OF 4',
+    title: 'Reserve your shift',
+    body: 'Add your email, confirm consent, then tap “Join the Architect waitlist.”',
+    placement: 'right',
+  });
+}
+
+landingBrand?.addEventListener('click', () => {
+  if (readGuideStage() !== 'logo') return;
+  writeGuideStage('core');
+  landingGuide.hide();
+});
 
 function lockRoleChangingControls(): () => void {
   const controls: Array<HTMLButtonElement | HTMLSelectElement> = [
@@ -437,6 +479,8 @@ form?.addEventListener('submit', async (event) => {
     if (roleSelect) roleSelect.value = selectedRole;
     updateSignupProgress();
     void track('signup_completed', { role: submittedRole });
+    writeGuideStage('logo');
+    window.setTimeout(showLandingGuide, 120);
   } catch {
     form.classList.add('has-error');
     if (formStatus) formStatus.textContent = 'The roster link is offline right now. Please try again in a moment.';
@@ -487,6 +531,10 @@ window.addEventListener('scroll', () => {
   }
 }, { passive: true });
 updateScrollEffects();
+window.setTimeout(showLandingGuide, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 420);
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) window.setTimeout(showLandingGuide, 80);
+});
 
 const hero = document.querySelector<HTMLElement>('.hero');
 const joinSection = document.querySelector<HTMLElement>('#join');
