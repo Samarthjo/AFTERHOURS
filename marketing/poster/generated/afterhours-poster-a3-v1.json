@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "asset": "afterhours-a3-qr-poster",
+  "campaign": "poster-launch-v1",
+  "canonicalUrl": "https://afterhours-night-shift.vercel.app/",
+  "trackingUrl": "https://afterhours-night-shift.vercel.app/?c=poster-launch-v1&utm_source=print&utm_medium=qr&utm_campaign=afterhours_launch&utm_content=city_awake&qr_id=poster-launch-v1",
+  "tracking": {
+    "utm_source": "print",
+    "utm_medium": "qr",
+    "utm_campaign": "afterhours_launch",
+    "utm_content": "city_awake",
+    "qr_id": "poster-launch-v1"
+  },
+  "page": {
+    "widthMm": 297,
+    "heightMm": 420,
+    "format": "A3 portrait"
+  },
+  "qr": {
+    "errorCorrectionLevel": "H",
+    "quietZoneModules": 4,
+    "matrixModules": 69,
+    "totalModules": 77,
+    "printedSizeMm": 64,
+    "moduleSizeMm": 0.8312,
+    "payloadSha256": "bf47d545591e4a6b9d7eed215cdca5e1a953b90efe97725964babb49d46af17f"
+  },
+  "printNotes": [
+    "Print at 100% / actual size on A3 portrait stock.",
+    "Do not crop, recolor, distort, or place artwork over the white QR plate.",
+    "Run a physical scan test at the intended viewing distance before distribution."
+  ]
+}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#12352d"/><stop offset=".62" stop-color="#08130f"/><stop offset="1" stop-color="#030504"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#63f59d" stop-opacity=".9"/><stop offset="1" stop-color="#63f59d" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#sky)"/>
+  <circle cx="890" cy="205" r="190" fill="url(#glow)" opacity=".45"/>
+  <path fill="#0a211a" d="M0 402h73V287h56v115h51V226h91v176h68V311h81v91h65V182h124v220h81V268h86v134h73V140h146v262h90V236h95v166h40v228H0z"/>
+  <path fill="#030605" d="M0 510 122 425l88 43 96-139 121 98 78-71 124 127 105-172 124 119 96-87 142 128 124-96v255H0z"/>
+  <g transform="translate(70 64)"><path fill="#63f59d" d="M40 0 75 20v40L40 80 5 60V20z"/><text x="40" y="54" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="37" fill="#06110c">A</text></g>
+  <text x="170" y="98" font-family="Arial, sans-serif" font-weight="900" font-size="30" letter-spacing="5" fill="#f4f2e8">AFTERHOURS</text>
+  <text x="70" y="220" font-family="Arial, sans-serif" font-weight="900" font-size="76" fill="#f4f2e8">THE CITY IS</text>
+  <text x="70" y="300" font-family="Arial, sans-serif" font-weight="900" font-size="76" fill="#63f59d">STILL AWAKE.</text>
+  <text x="74" y="354" font-family="Arial, sans-serif" font-size="24" fill="#b9c8c0">Five roles. One city. Terrible timing.</text>
+</svg>

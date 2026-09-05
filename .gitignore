@@ -1,0 +1,12 @@
+node_modules/
+dist/
+data/world-state.json
+data/world-state.tmp.json
+*.log
+*.tsbuildinfo
+.vercel/
+.vercel-cli/
+marketing/.env.local
+marketing/.env.*.local
+marketing/tmp/
+.DS_Store

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#03100c" />
+    <meta
+      name="description"
+      content="Tune a living night city, reveal its signal, and scan into the AFTERHOURS founding playtest."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="AFTERHOURS — The City Is Still Awake" />
+    <meta
+      property="og:description"
+      content="Three city states. Five civic roles. One shared night shift."
+    />
+    <meta property="og:url" content="https://afterhours-night-shift.vercel.app/poster" />
+    <meta property="og:image" content="https://afterhours-night-shift.vercel.app/og-card.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <link rel="canonical" href="https://afterhours-night-shift.vercel.app/poster" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/interactive-poster.css" />
+    <title>AFTERHOURS — Interactive City Signal</title>
+  </head>
+  <body>
+    <div class="poster-shell" id="interactive-poster">
+      <header class="poster-header">
+        <a class="poster-brand" href="/" aria-label="AFTERHOURS landing page">
+          <span class="poster-brand__mark" aria-hidden="true">A</span>
+          <span>
+            <b>AFTERHOURS</b>
+            <small>FOUNDING SIGNAL // 02:13</small>
+          </span>
+        </a>
+
+        <div class="poster-header__actions">
+          <span class="signal-chip"><i aria-hidden="true"></i> CITY LINK OPEN</span>
+          <button class="share-button" id="share-poster" type="button">
+            <span aria-hidden="true">↗</span> Share signal
+          </button>
+        </div>
+      </header>
+
+      <main class="poster-stage" aria-labelledby="poster-title">
+        <div class="poster-copy">
+          <p>LIVE CO-OP CITY SURVIVAL</p>
+          <h1 id="poster-title"><span>THE CITY IS</span><strong>STILL AWAKE.</strong></h1>
+          <p class="poster-copy__line">Five roles. One city. Terrible timing.</p>
+        </div>
+
+        <button
+          class="city-trigger"
+          id="city-trigger"
+          type="button"
+          aria-label="Explore the city. Press Enter or tap to reveal its QR signal."
+          aria-haspopup="dialog"
+          aria-controls="qr-dialog"
+          aria-expanded="false"
+        >
+          <canvas class="city-canvas" id="city-canvas" aria-hidden="true"></canvas>
+          <span class="city-vignette" aria-hidden="true"></span>
+          <span class="core-target" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="scene-instruction">
+            <b>Tap the Civic Core</b>
+            <small>Reveal the city signal</small>
+          </span>
+        </button>
+
+        <div class="city-readout" aria-label="Simulated poster state">
+          <span><small>SHIFT</small><b id="shift-readout">01:30</b></span>
+          <span><small>GRID</small><b id="grid-readout">68%</b></span>
+          <span><small>PRESSURE</small><b id="pressure-readout">71%</b></span>
+        </div>
+      </main>
+
+      <section class="control-deck" aria-label="Tune the simulated city">
+        <div class="dispatch-line">
+          <span>SIMULATED DISPATCH</span>
+          <p id="state-narrative" aria-live="polite">Deep shift. Grid stable. Civic pressure critical.</p>
+        </div>
+
+        <div class="state-selectors">
+          <fieldset class="state-selector" data-state-group="shift">
+            <legend>Shift</legend>
+            <label><input type="radio" name="shift" value="dusk" /><span>Dusk</span></label>
+            <label><input type="radio" name="shift" value="deep" checked /><span>Deep</span></label>
+            <label><input type="radio" name="shift" value="dawn" /><span>Dawn</span></label>
+          </fieldset>
+
+          <fieldset class="state-selector" data-state-group="grid">
+            <legend>Grid</legend>
+            <label><input type="radio" name="grid" value="strained" /><span>Strained</span></label>
+            <label><input type="radio" name="grid" value="stable" checked /><span>Stable</span></label>
+            <label><input type="radio" name="grid" value="surplus" /><span>Surplus</span></label>
+          </fieldset>
+
+          <fieldset class="state-selector" data-state-group="pressure">
+            <legend>Pressure</legend>
+            <label><input type="radio" name="pressure" value="watch" /><span>Watch</span></label>
+            <label><input type="radio" name="pressure" value="critical" checked /><span>Critical</span></label>
+            <label><input type="radio" name="pressure" value="cascade" /><span>Cascade</span></label>
+          </fieldset>
+        </div>
+      </section>
+
+      <dialog class="qr-dialog scan-studio" id="qr-dialog" aria-labelledby="qr-title" aria-describedby="qr-description">
+        <header class="scan-studio__header">
+          <div class="scan-studio__brand" aria-label="AFTERHOURS scan studio">
+            <span aria-hidden="true">A</span>
+            <p><b>AFTERHOURS</b><small>ROLE SIGNAL LAB</small></p>
+          </div>
+          <div class="scan-studio__actions">
+            <button class="studio-share" id="studio-share" type="button"><span aria-hidden="true">↗</span> Share</button>
+            <form method="dialog">
+              <button class="qr-dialog__close" type="submit" aria-label="Close scan studio">×</button>
+            </form>
+          </div>
+        </header>
+
+        <main class="scan-studio__main">
+          <div class="studio-role-copy">
+            <p id="studio-role-kicker">MATERIALS / INFRASTRUCTURE</p>
+            <h2 id="qr-title">ARCHITECT SIGNAL</h2>
+            <p id="qr-description">Build capacity before the city outgrows itself.</p>
+          </div>
+
+          <button
+            class="morph-trigger"
+            id="morph-trigger"
+            type="button"
+            aria-pressed="false"
+            aria-describedby="morph-tap-label"
+          >
+            <svg
+              class="qr-morph"
+              id="qr-morph"
+              viewBox="0 0 720 720"
+              role="img"
+              aria-labelledby="morph-title morph-description"
+            >
+              <title id="morph-title">Scannable QR code for the AFTERHOURS poster</title>
+              <desc id="morph-description">A flat QR code that can transform into an Architect voxel sculpture.</desc>
+              <rect class="qr-morph__plate" id="qr-morph-plate" x="60" y="60" width="600" height="600" rx="7"></rect>
+              <g id="qr-module-field" aria-hidden="true"></g>
+            </svg>
+            <span class="morph-tap-label" id="morph-tap-label">Tap the code to build Architect</span>
+          </button>
+
+          <p class="studio-morph-status" id="studio-morph-status" aria-live="polite"></p>
+        </main>
+
+        <footer class="scan-studio__footer">
+          <a class="studio-destination" href="https://afterhours-night-shift.vercel.app/p/1">
+            <span><small>DIRECT POSTER SIGNAL</small>afterhours-night-shift.vercel.app/p/1</span>
+            <b aria-hidden="true">→</b>
+          </a>
+
+          <fieldset class="studio-roles" aria-label="Choose a civic role sculpture">
+            <legend>Choose the object hidden inside the code</legend>
+            <label><input type="radio" name="studio-role" value="architect" checked /><span><i aria-hidden="true">▰</i>Architect</span></label>
+            <label><input type="radio" name="studio-role" value="cultivator" /><span><i aria-hidden="true">✿</i>Cultivator</span></label>
+            <label><input type="radio" name="studio-role" value="engineer" /><span><i aria-hidden="true">⌁</i>Engineer</span></label>
+            <label><input type="radio" name="studio-role" value="operator" /><span><i aria-hidden="true">ϟ</i>Operator</span></label>
+            <label><input type="radio" name="studio-role" value="medic" /><span><i aria-hidden="true">+</i>Medic</span></label>
+          </fieldset>
+        </footer>
+      </dialog>
+
+      <p class="share-status" id="share-status" aria-live="polite"></p>
+      <noscript>
+        <p class="noscript-note">This city signal needs JavaScript. The main AFTERHOURS page is available at <a href="/">the city entrance</a>.</p>
+      </noscript>
+    </div>
+
+    <script type="module" src="/src/interactive-poster.ts"></script>
+  </body>
+</html>
