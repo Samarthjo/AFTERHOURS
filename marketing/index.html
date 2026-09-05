@@ -66,14 +66,49 @@
         <div class="cable cable--two" aria-hidden="true"></div>
 
         <div class="hero__content">
-          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> A persistent co-op city survival game</p>
-          <h1 id="hero-title"><span>The city is</span><strong>still awake.</strong></h1>
-          <p class="hero__lede">Pick a role. Share the load. Keep one persistent city alive through the longest night.</p>
-          <div class="hero__actions">
-            <a class="button button--primary" href="#join" data-play data-placement="hero">Start your shift <span aria-hidden="true">→</span></a>
-            <a class="button button--ghost" href="#how">See how the night works</a>
+          <form class="signup signup--hero" id="join" data-signup-form novalidate aria-labelledby="waitlist-title">
+            <div class="signup--hero__head">
+              <p><span class="live-dot" aria-hidden="true"></span> FOUNDING ROSTER // OPEN</p>
+              <strong id="waitlist-title">Claim your night shift.</strong>
+              <small>One email. No spam. We’ll send the first playtest signal when your district opens.</small>
+            </div>
+            <div class="signup-progress" aria-hidden="true"><span>ROSTER LINK</span><i><em data-signup-progress></em></i><b data-signup-progress-label>0 / 2</b></div>
+            <div class="signup--hero__fields">
+              <label class="signup--hero__email">Email address
+                <input name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="night.shift@example.com" aria-describedby="waitlist-privacy waitlist-status" required />
+              </label>
+              <label>Preferred role
+                <select name="role" data-role-select aria-label="Preferred civic role">
+                  <option value="architect">Architect — Build</option>
+                  <option value="cultivator">Cultivator — Grow</option>
+                  <option value="engineer">Systems Engineer — Repair</option>
+                  <option value="operator">Grid Operator — Power</option>
+                  <option value="medic">Civic Medic — Care</option>
+                </select>
+              </label>
+            </div>
+            <label class="honeypot" aria-hidden="true">Company website <input name="website" tabindex="-1" autocomplete="off" /></label>
+            <label class="consent"><input name="consent" type="checkbox" required /><span>I agree to receive my shift link and occasional playtest updates. I can unsubscribe at any time.</span></label>
+            <p class="privacy-note" id="waitlist-privacy"><span aria-hidden="true">◇</span> Stored in the private Supabase roster, separate from anonymous game telemetry.</p>
+            <button class="button button--primary button--wide signup--hero__submit" type="submit"><span data-submit-label>Join the Architect waitlist</span><i aria-hidden="true">→</i></button>
+            <p class="form-status" id="waitlist-status" role="status" aria-live="polite" data-form-status></p>
+            <div class="signup-receipt" hidden data-signup-receipt tabindex="-1">
+              <span>SHIFT RESERVED</span>
+              <strong data-receipt-callsign>NIGHT CITIZEN</strong>
+              <small data-receipt-role>ARCHITECT // FOUNDING ROSTER</small>
+              <a href="#how">Read the night briefing <b aria-hidden="true">→</b></a>
+            </div>
+          </form>
+          <div class="hero__pitch">
+            <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> A persistent co-op city survival game</p>
+            <h1 id="hero-title"><span>The city is</span><strong>still awake.</strong></h1>
+            <p class="hero__lede">Pick a role. Share the load. Keep one persistent city alive through the longest night.</p>
+            <div class="hero__actions">
+              <a class="button button--primary" href="#join" data-play data-placement="hero">Start your shift <span aria-hidden="true">→</span></a>
+              <a class="button button--ghost" href="#how">See how the night works</a>
+            </div>
+            <p class="promise"><span>No download</span><span>Plays in your browser</span><span>Founding playtest</span></p>
           </div>
-          <p class="promise"><span>No download</span><span>Plays in your browser</span><span>Founding playtest</span></p>
         </div>
         <a class="scroll-cue" href="#signal" aria-label="Scroll to learn more"><span></span> Scroll into the city</a>
       </section>
@@ -204,37 +239,21 @@
         </div>
       </section>
 
-      <section class="join section-shell" id="join" aria-labelledby="join-title">
+      <section class="join section-shell" id="waitlist-details" aria-labelledby="join-title">
         <div class="join__copy reveal">
           <p class="eyebrow">YOUR SHIFT STARTS HERE</p>
           <h2 id="join-title">The city can wait.<br /><em>It just can’t wait long.</em></h2>
-          <p>Email is all we need. Add a callsign if you want one, then choose which civic problem should know your name.</p>
+          <p>The founding roster is already live at the top of this page. Choose a civic problem, leave one email, and we’ll send your shift link when the city opens.</p>
           <p class="selected-shift" data-selected-shift aria-live="polite"><span>01</span> Architect shift selected</p>
+          <a class="button button--primary" href="#join" data-focus-waitlist>Return to the roster <span aria-hidden="true">↑</span></a>
         </div>
-        <form class="signup reveal" data-signup-form novalidate>
-          <div class="signup-progress" aria-hidden="true"><span>ROSTER PACKET</span><i><em data-signup-progress></em></i><b data-signup-progress-label>0 / 2</b></div>
-          <label>Email <input name="email" type="email" autocomplete="email" maxlength="254" placeholder="night.shift@example.com" required /></label>
-          <label>Callsign <small>OPTIONAL</small><input name="callsign" autocomplete="nickname" minlength="2" maxlength="24" placeholder="How should the city remember you?" /></label>
-          <label>Preferred shift
-            <select name="role" data-role-select>
-              <option value="architect">Architect — Build</option>
-              <option value="cultivator">Cultivator — Grow</option>
-              <option value="engineer">Systems Engineer — Repair</option>
-              <option value="operator">Grid Operator — Power</option>
-              <option value="medic">Civic Medic — Care</option>
-            </select>
-          </label>
-          <label class="honeypot" aria-hidden="true">Company website <input name="website" tabindex="-1" autocomplete="off" /></label>
-          <label class="consent"><input name="consent" type="checkbox" required /><span>I agree to receive the shift link and occasional playtest updates. I can withdraw consent by replying to any message.</span></label>
-          <p class="privacy-note">Signup details are stored separately from anonymous funnel events and aggregate gameplay telemetry.</p>
-          <button class="button button--primary button--wide" type="submit"><span data-submit-label>Join the Architect waitlist</span><i aria-hidden="true">→</i></button>
-          <p class="form-status" role="status" aria-live="polite" data-form-status></p>
-          <div class="signup-receipt" hidden data-signup-receipt tabindex="-1">
-            <span>SHIFT RESERVED</span>
-            <strong data-receipt-callsign>NIGHT CITIZEN</strong>
-            <small data-receipt-role>ARCHITECT // FOUNDING ROSTER</small>
-          </div>
-        </form>
+        <aside class="join__signal reveal" aria-label="Founding roster status">
+          <span>SUPABASE ROSTER</span>
+          <strong>LIVE</strong>
+          <p>Consent-aware signup storage</p>
+          <p>Duplicate email protection</p>
+          <p>Campaign source attached</p>
+        </aside>
       </section>
 
       <section class="faq section-shell" id="faq" aria-labelledby="faq-title">

@@ -224,6 +224,13 @@ for (const playLink of document.querySelectorAll<HTMLAnchorElement>('[data-play]
   });
 }
 
+for (const rosterLink of document.querySelectorAll<HTMLAnchorElement>('[data-focus-waitlist]')) {
+  rosterLink.addEventListener('click', (event) => {
+    event.preventDefault();
+    scrollToRoster();
+  });
+}
+
 const roleTabs = [...document.querySelectorAll<HTMLButtonElement>('.role-tab')];
 const roleDetail = document.querySelector<HTMLElement>('[data-role-detail]');
 const roleSelect = document.querySelector<HTMLSelectElement>('[data-role-select]');
@@ -357,6 +364,10 @@ function updateSignupProgress(): void {
 form?.addEventListener('input', (event) => {
   const field = event.target;
   if (field instanceof HTMLInputElement && field.validity.valid) field.removeAttribute('aria-invalid');
+  if (form.classList.contains('has-error')) {
+    form.classList.remove('has-error');
+    if (formStatus) formStatus.textContent = '';
+  }
   updateSignupProgress();
 });
 
@@ -371,6 +382,10 @@ form?.addEventListener('submit', async (event) => {
   if (!form.checkValidity()) {
     const invalid = form.querySelector<HTMLInputElement | HTMLSelectElement>(':invalid');
     invalid?.setAttribute('aria-invalid', 'true');
+    form.classList.add('has-error');
+    if (formStatus) formStatus.textContent = invalid?.name === 'consent'
+      ? 'Confirm you want playtest updates to reserve this shift.'
+      : 'Enter a valid email so the city can reach you.';
     invalid?.focus();
     form.reportValidity();
     return;
@@ -383,6 +398,8 @@ form?.addEventListener('submit', async (event) => {
   const restoreRoleChangingControls = lockRoleChangingControls();
   const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
   if (submit) submit.disabled = true;
+  form.classList.add('is-loading');
+  form.setAttribute('aria-busy', 'true');
   form.classList.remove('has-error', 'is-success');
   if (formStatus) formStatus.textContent = 'Connecting your shift to the civic roster…';
 
@@ -425,6 +442,8 @@ form?.addEventListener('submit', async (event) => {
     if (formStatus) formStatus.textContent = 'The roster link is offline right now. Please try again in a moment.';
   } finally {
     restoreRoleChangingControls();
+    form.classList.remove('is-loading');
+    form.removeAttribute('aria-busy');
     if (submit) submit.disabled = false;
   }
 });
