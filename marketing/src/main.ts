@@ -187,15 +187,15 @@ function gameDestination(): string | null {
 }
 
 function scrollToRoster(): void {
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const avoidAnimatedScroll = window.matchMedia('(prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 640px)').matches;
   document.querySelector<HTMLElement>('#join')?.scrollIntoView({
-    behavior: reducedMotion ? 'auto' : 'smooth',
+    behavior: avoidAnimatedScroll ? 'auto' : 'smooth',
     block: 'start',
   });
   if (window.matchMedia('(pointer: fine)').matches) {
     window.setTimeout(
       () => document.querySelector<HTMLInputElement>('input[name="email"]')?.focus(),
-      reducedMotion ? 0 : 220,
+      avoidAnimatedScroll ? 0 : 220,
     );
   }
 }

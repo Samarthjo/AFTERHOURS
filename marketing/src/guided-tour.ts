@@ -86,8 +86,8 @@ export class GuidedTour {
     this.root.hidden = false;
 
     if (step.scrollIntoView !== false && !this.isTargetComfortablyVisible()) {
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      this.target.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
+      const avoidAnimatedScroll = window.matchMedia('(prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 640px)').matches;
+      this.target.scrollIntoView({ behavior: avoidAnimatedScroll ? 'auto' : 'smooth', block: 'center' });
     }
     this.queuePosition();
   }

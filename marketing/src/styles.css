@@ -672,8 +672,25 @@
     .js .reveal { opacity: 1; transform: none; }
   }
 
-  @media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  @media (prefers-reduced-motion: reduce), (pointer: coarse), (max-width: 640px) {
+    html { scroll-behavior: auto; }
     .aurora, .signal-moon span, .live-dot, .premise__poster::after { animation: none; }
+
+    /*
+     * iOS Safari can terminate its WebContent process when several large,
+     * translucent filter layers are composited while jumping to #join.
+     * Keep the mobile art direction, but remove the costly GPU layers.
+     */
+    .noise, .aurora { display: none; }
+    .site-header,
+    .site-header.is-scrolled,
+    .signup--hero,
+    .pulse-message {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    .site-header.is-scrolled { background: rgba(5, 9, 7, 0.97); }
+    .signup--hero { background: linear-gradient(135deg, rgba(89,245,154,0.06), transparent 37%), #030c08; }
   }
 
   .reduce-data .aurora, .reduce-data .signal-moon span, .reduce-data .live-dot,
