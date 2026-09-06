@@ -150,6 +150,43 @@ input:focus-visible + span {
   box-shadow: 0 0 1rem var(--green);
 }
 
+.poster-game-cta {
+  display: inline-flex;
+  min-height: 40px;
+  padding: 0.58rem 0.82rem;
+  align-items: center;
+  gap: 0.48rem;
+  border: 1px solid rgba(98, 245, 155, 0.48);
+  border-radius: 999px;
+  color: var(--green);
+  background: rgba(6, 27, 18, 0.82);
+  box-shadow: 0 0 1.5rem rgba(98, 245, 155, 0.08);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-decoration: none;
+  text-transform: uppercase;
+  animation: game-cta-enter 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transition: border-color 180ms ease, color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.poster-game-cta[hidden],
+.studio-game-cta[hidden] {
+  display: none;
+}
+
+.poster-game-cta:hover,
+.poster-game-cta:focus-visible {
+  border-color: var(--green);
+  color: #03100b;
+  background: var(--green);
+  transform: translateY(-1px);
+}
+
+.poster-game-cta__short {
+  display: none;
+}
+
 .share-button {
   min-height: 44px;
   padding: 0.65rem 0.9rem;
@@ -804,6 +841,78 @@ input:focus-visible + span {
   border: 0;
 }
 
+.studio-game-cta {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  right: clamp(1rem, 3.7vw, 4rem);
+  display: grid;
+  width: min(17rem, 21vw);
+  min-height: 8rem;
+  padding: 1rem 1.1rem;
+  align-content: center;
+  border: 1px solid color-mix(in srgb, var(--role-primary) 58%, var(--studio-line));
+  border-radius: 0.8rem;
+  color: var(--studio-ink);
+  background: rgba(255, 253, 248, 0.84);
+  box-shadow: 0 1rem 3rem rgba(43, 32, 20, 0.1);
+  text-decoration: none;
+  translate: 0 -50%;
+  backdrop-filter: blur(14px);
+  animation: studio-game-cta-enter 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.studio-game-cta:hover,
+.studio-game-cta:focus-visible {
+  border-color: var(--role-primary);
+  background: rgba(255, 253, 248, 0.97);
+  transform: translateY(-2px);
+}
+
+.studio-game-cta small {
+  color: var(--role-primary);
+  font-size: 0.53rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.studio-game-cta strong {
+  margin-top: 0.38rem;
+  font-family: "Barlow Condensed", Impact, sans-serif;
+  font-size: clamp(1.55rem, 2.2vw, 2.3rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.studio-game-cta > span {
+  display: flex;
+  margin-top: 0.65rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  color: var(--studio-muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.studio-game-cta b {
+  color: var(--role-primary);
+  font-size: 1rem;
+}
+
+@keyframes game-cta-enter {
+  from { opacity: 0; transform: translateX(0.6rem); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes studio-game-cta-enter {
+  from { opacity: 0; translate: 1rem -50%; }
+  to { opacity: 1; translate: 0 -50%; }
+}
+
 .scan-studio__footer {
   z-index: 4;
   display: grid;
@@ -1027,6 +1136,11 @@ input:focus-visible + span {
     width: 13rem;
   }
 
+  .studio-game-cta {
+    right: 1.25rem;
+    width: 13rem;
+  }
+
   .morph-trigger {
     width: min(64dvh, 54vw, 37rem);
   }
@@ -1081,6 +1195,23 @@ input:focus-visible + span {
   .poster-brand small,
   .signal-chip {
     display: none;
+  }
+
+  .poster-header__actions {
+    gap: 0.4rem;
+  }
+
+  .poster-game-cta {
+    min-height: 40px;
+    padding-inline: 0.72rem;
+  }
+
+  .poster-game-cta__long {
+    display: none;
+  }
+
+  .poster-game-cta__short {
+    display: inline;
   }
 
   .share-button {
@@ -1230,8 +1361,37 @@ input:focus-visible + span {
   }
 
   .scan-studio__main {
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
     padding: 0 0.55rem 0.2rem;
+  }
+
+  .studio-game-cta {
+    position: static;
+    width: min(100%, 30rem);
+    min-height: 46px;
+    margin: 0 auto 0.25rem;
+    padding: 0.58rem 0.75rem;
+    align-items: center;
+    grid-template-columns: 1fr auto;
+    translate: none;
+    animation-name: game-cta-enter;
+  }
+
+  .studio-game-cta small,
+  .studio-game-cta > span {
+    display: none;
+  }
+
+  .studio-game-cta strong {
+    margin: 0;
+    font-size: 1.35rem;
+  }
+
+  .studio-game-cta::after {
+    color: var(--role-primary);
+    content: "↗";
+    font-size: 1rem;
+    font-weight: 900;
   }
 
   .studio-role-copy {

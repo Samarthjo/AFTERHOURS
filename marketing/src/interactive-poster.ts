@@ -268,6 +268,8 @@ const studioBackButton = required<HTMLButtonElement>('#studio-back');
 const studioCloseButton = required<HTMLButtonElement>('#studio-close');
 const studioRoleInputs = Array.from(document.querySelectorAll<HTMLInputElement>('input[name="studio-role"]'));
 const shareButton = required<HTMLButtonElement>('#share-poster');
+const posterGameLink = required<HTMLAnchorElement>('#poster-game-cta');
+const studioGameLink = required<HTMLAnchorElement>('#studio-game-cta');
 const waitlistLink = required<HTMLAnchorElement>('#poster-waitlist');
 const waitlistRoleLabel = required<HTMLElement>('#poster-waitlist-role');
 const corePrompt = required<HTMLElement>('.scene-instruction');
@@ -979,6 +981,11 @@ function updateMorphLabels(): void {
     : `A flat high-contrast QR code that opens ${QR_DESTINATION_URL} and can transform into ${profile.object}.`;
 }
 
+function syncGameLinks(): void {
+  posterGameLink.hidden = readGuideStage() !== 'complete';
+  studioGameLink.hidden = studioMode !== 'sculpture';
+}
+
 function updateStudioRoleUi(): void {
   const profile = roleProfiles[selectedStudioRole];
   qrDialog.dataset.role = selectedStudioRole;
@@ -1014,6 +1021,7 @@ function setExactMorphState(): void {
   renderedStudioMode = studioMode;
   renderedStudioRole = selectedStudioRole;
   updateMorphLabels();
+  syncGameLinks();
 }
 
 async function renderMorph(instant = false, announce = true): Promise<void> {
@@ -1847,8 +1855,10 @@ morphTrigger.addEventListener('click', () => {
   if (readGuideStage() === 'qr') {
     writeGuideStage('complete');
     posterGuide.hide();
+    syncGameLinks();
   }
   studioMode = studioMode === 'qr' ? 'sculpture' : 'qr';
+  if (studioMode === 'qr') syncGameLinks();
   trackPoster('poster_midpoint');
   void renderMorph();
 });
@@ -1858,6 +1868,7 @@ qrDialog.addEventListener('close', () => {
   posterShell.classList.remove('is-revealing');
   revealInProgress = false;
   studioMode = 'qr';
+  syncGameLinks();
   void renderMorph(true, false);
   cityTrigger.setAttribute('aria-expanded', 'false');
   updateDisplayUrl();
@@ -1915,11 +1926,13 @@ const resizeObserver = new ResizeObserver(resizeCanvas);
 resizeObserver.observe(cityTrigger);
 updateStateUi();
 updateStudioRoleUi();
+syncGameLinks();
 void renderMorph(true, false);
 updateDisplayUrl();
 resizeCanvas();
 trackPoster('poster_started');
 window.setTimeout(showPosterGuide, reducedMotion ? 0 : 420);
 window.addEventListener('pageshow', (event) => {
+  syncGameLinks();
   if (event.persisted) window.setTimeout(showPosterGuide, 80);
 });
